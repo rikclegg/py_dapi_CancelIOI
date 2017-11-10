@@ -2,8 +2,6 @@
 
 import sys
 import blpapi
-import datetime
-import time
 
 SESSION_STARTED                 = blpapi.Name("SessionStarted")
 SESSION_STARTUP_FAILURE         = blpapi.Name("SessionStartupFailure")
@@ -11,12 +9,10 @@ SERVICE_OPENED                  = blpapi.Name("ServiceOpened")
 SERVICE_OPEN_FAILURE            = blpapi.Name("ServiceOpenFailure")
 SLOW_CONSUMER_WARNING           = blpapi.Name("SlowConsumerWarning")
 SLOW_CONSUMER_WARNING_CLEARED   = blpapi.Name("SlowConsumerWarningCleared")
-AUTHORIZATION_SUCCESS           = blpapi.Name("AuthorizationSuccess")
-AUTHORIZATION_FAILURE           = blpapi.Name("AuthorizationFailure")
 HANDLE                          = blpapi.Name("handle")
 
 
-d_emsx = "//blp/ioiapi-beta-request"
+d_ioi = "//blp/ioiapi-beta-request"
 d_host = "localhost"
 d_port = 8194
 
@@ -26,7 +22,7 @@ class SessionEventHandler():
     
     def sendCreateIOI(self, session):
 
-        service = session.getService(d_emsx)
+        service = session.getService(d_ioi)
         request = service.createRequest("cancelIoi")
 
         handle = request.getElement("handle")
@@ -57,7 +53,7 @@ class SessionEventHandler():
         for msg in event:
             if msg.messageType() == SESSION_STARTED:
                 print("Session started...")
-                session.openServiceAsync(d_emsx)
+                session.openServiceAsync(d_ioi)
                 
             elif msg.messageType() == SESSION_STARTUP_FAILURE:
                 sys.stderr.write("Error: Session startup failed")
@@ -73,7 +69,7 @@ class SessionEventHandler():
             
             if msg.messageType() == SERVICE_OPENED:
                 
-                print("EMSX service opened... Sending request...")
+                print("IOIAPI service opened... Sending request...")
                 self.sendCreateIOI(session)
                 
             elif msg.messageType() == SERVICE_OPEN_FAILURE:
@@ -133,8 +129,8 @@ class SessionEventHandler():
             else:
                 self.processMiscEvents(event)
                 
-        except:
-            print("Exception:  %s" % sys.exc_info()[0])
+        except Exception as e:
+            print("Exception:  %s" % str(e))
             
         return False
 
