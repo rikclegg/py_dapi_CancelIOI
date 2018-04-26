@@ -26,7 +26,7 @@ class SessionEventHandler():
         request = service.createRequest("cancelIoi")
 
         handle = request.getElement("handle")
-        handle.setElement("value", "f6f07a52-a0e7-4060-b8dd-35181b036143")
+        handle.setElement("value", "33505c9b-b8b1-414d-aeac-a28b7c650da7")
 
         print("Sending Request: %s" % request.toString())
 
